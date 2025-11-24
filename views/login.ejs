@@ -1,0 +1,10 @@
+<h2>Login</h2>
+<form action="/auth/login" method="post">
+  <label>Usuario <input name="username" value="<%= old.username || '' %>"></label>
+  <label>Password <input type="password" name="password"></label>
+  <button type="submit">Ingresar</button>
+</form>
+<% if (errors && errors.length) { %>
+  <ul><% errors.forEach(e=>{ %><li><%= e.msg %></li><% }) %></ul>
+<% } %>
+<p><a href="/auth/register">Registrar</a></p>

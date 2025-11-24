@@ -1,0 +1,73 @@
+<h2>Chat de administradores</h2>
+<div id="messages" style="border:1px solid #ccc;height:300px;overflow:auto"></div>
+<script>
+  const socket = io();
+  const messages = document.getElementById('messages');
+  const input = document.getElementById('msg');
+  document.getElementById('send').onclick = ()=> {
+    const text = input.value.trim();
+    if (!text) return;
+    socket.emit('chatMessage', { text });
+    input.value = '';
+  };
+  socket.on('chatMessage', msg => {
+    const el = document.createElement('div');
+    el.textContent = msg.user + ': ' + msg.text;
+    messages.appendChild(el);
+    messages.scrollTop = messages.scrollHeight;
+  });
+</script>
+<form id="chatForm" autocomplete="off">
+  <input id="message" name="message" placeholder="Mensaje..." />
+  <button id="sendBtn" type="submit">Enviar</button>
+</form>
+<div id="messages"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  (function(){
+    const form = document.getElementById('chatForm');
+    const input = document.getElementById('message');
+    const messages = document.getElementById('messages');
+
+    function appendLog(text){ const p = document.createElement('div'); p.textContent = text; messages.appendChild(p); }
+
+    let socket;
+    try {
+      socket = io();
+      socket.on('connect', ()=> appendLog('socket connected: ' + socket.id));
+      socket.on('connect_error', (err)=> appendLog('socket connect error'));
+      socket.on('chatMessage', (m)=> appendLog((m.user||'Anon') + ': ' + m.text));
+    } catch (e) {
+      appendLog('socket.io cliente no disponible');
+      socket = null;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text) return appendLog('mensaje vacío');
+      if (socket && socket.connected) {
+        socket.emit('chatMessage', { text, user: window.currentUser || 'Anon' });
+        input.value = '';
+        return;
+      }
+      try {
+        const res = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text })
+        });
+        if (!res.ok) {
+          const txt = await res.text();
+          appendLog('Error servidor: ' + txt);
+        } else {
+          input.value = '';
+          appendLog('mensaje enviado via fetch');
+        }
+      } catch (err) {
+        appendLog('Fetch error: ' + err.message);
+      }
+    });
+  })();
+</script>

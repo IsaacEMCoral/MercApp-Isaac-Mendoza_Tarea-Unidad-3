@@ -1,0 +1,15 @@
+<h2>Productos</h2>
+<% if (user && user.role === 'admin') { %>
+  <a href="/products/create">Crear producto</a>
+<% } %>
+<ul>
+  <% products.forEach(p=>{ %>
+    <li>
+      <a href="/products/<%= p._id %>"><%= p.name %></a> - <%= p.sku %> - $<%= p.price %>
+      <% if (user && user.role === 'admin') { %>
+        <a href="/products/<%= p._id %>/edit">Editar</a>
+        <form action="/products/<%= p._id %>/delete" method="post" style="display:inline;"><button>Eliminar</button></form>
+      <% } %>
+    </li>
+  <% }) %>
+</ul>

@@ -1,0 +1,22 @@
+<h2><%= product && product._id ? 'Editar' : 'Crear' %> Producto</h2>
+<form method="post" enctype="multipart/form-data" action="<%= product && product._id ? '/products/' + product._id + '/edit' : '/products/create' %>">
+  <label>Nombre <input name="name" value="<%= product.name || '' %>"></label>
+  <label>SKU <input name="sku" value="<%= product.sku || '' %>"></label>
+  <label>Precio <input name="price" type="number" step="0.01" value="<%= product.price || 0 %>"></label>
+  <label>Cantidad <input name="quantity" type="number" value="<%= product.quantity || 0 %>"></label>
+  <label>Descripción <textarea name="description"><%= product.description || '' %></textarea></label>
+  <label>Imagen <input type="file" name="image"></label>
+  <% if (product && product.image) { %><img src="<%= product.image %>" width="120"><% } %>
+  <button type="submit">Guardar</button>
+</form>
+<select name="categoryId" required>
+  <option value="">Seleccione una categoría</option>
+  <% (categories || []).forEach(c => { %>
+  <option value="<%= c._id %>" <%= ((old && old.categoryId === String(c._id)) || (product && product.categoryId && String(product.categoryId) === String(c._id))) ? 'selected' : '' %>>
+    <%= c.name %>
+  </option>
+<% }) %>
+</select>
+<% if (errors && errors.length) { %>
+  <ul><% errors.forEach(e=>{ %><li><%= e.msg %></li><% }) %></ul>
+<% } %>

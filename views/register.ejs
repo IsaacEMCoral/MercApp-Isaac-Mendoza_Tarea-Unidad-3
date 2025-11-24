@@ -1,0 +1,9 @@
+<h2>Registro</h2>
+<form action="/auth/register" method="post">
+  <label>Usuario <input name="username" value="<%= old.username || '' %>"></label>
+  <label>Password <input type="password" name="password"></label>
+  <button type="submit">Registrar</button>
+</form>
+<% if (errors && errors.length) { %>
+  <ul><% errors.forEach(e=>{ %><li><%= e.msg %></li><% }) %></ul>
+<% } %>

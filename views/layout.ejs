@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>MiInventarioExpress</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <header>
+    <a href="/">MiInventarioExpress</a>
+    <% if (locals && locals.user) { %>
+      <span>Hola, <%= user.username %> (<%= user.role %>)</span>
+      <form action="/auth/logout" method="post" style="display:inline;"><button type="submit">Salir</button></form>
+    <% } %>
+    <nav>
+      <a href="/products">Productos</a>
+      <a href="/chat">Chat</a>
+    </nav>
+  </header>
+  <main>
+    <%- body %>
+  </main>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/chat.js"></script>
+</body>
+</html>

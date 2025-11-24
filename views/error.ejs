@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Error</title>
+  </head>
+  <body>
+    <h1>Error</h1>
+    <p><%= message || 'Ha ocurrido un error' %></p>
+    <% if (error && error.stack) { %>
+      <pre style="white-space:pre-wrap;"><%= error.stack %></pre>
+    <% } %>
+    <p><a href="/">Volver</a></p>
+  </body>
+</html>
